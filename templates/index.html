@@ -1,0 +1,182 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        <title>Investment Recommender</title>
+    </head>
+    <body>
+        <header>
+            <h1 id="sitename">Sustall</h1>
+            <nav id="nav-bar">
+                <a href="#">Home</a>
+                <a href="/blogs">Blogs</a>
+                <a href="/templates/recommendations.html" ><button id="chat">Chat with us</button></a>
+            </nav>
+        </header>
+
+        <main>
+            <div class="section1">
+                <h1 id="intro">INVEST SMARTER <br>WITH US</h1>
+                <p id="tagline">Dive into the world of finance with sustainable investments.</p>
+                <button class="btn">Get Started</button>
+                <div class="animation">
+                    <a href="#"> <img src="/images/pic.png" alt="logo" id="picx"></a>
+                </div>
+        </div>
+            <div class="parameters">
+                <h1 id="hey1">HELLO,</h1>
+                <h2 id="hey2">Let's dive into the world of sustainable investment</h2>
+                <form method="POST">
+                    <div class="form-grp">
+                    <label for="investment_amount">Investment Amount:</label>
+                    <input type="number" name="investment_amount" required placeholder="Enter amount">
+                </div>
+
+                <div class="form-grp">
+                    <label for="risk_tolerance">Risk Tolerance:</label>
+                    <select name="risk_tolerance" required>
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                    </select>
+                </div>
+
+                    <div class="form-grp">
+                    <label for="environment_importance">Environment Importance:</label>
+                    <select name="environment_importance" required>
+                        <option value="Not Important">Not Important</option>
+                        <option value="Somewhat Important">Somewhat Important</option>
+                        <option value="Very Important">Very Important</option>
+                    </select>
+                </div>
+
+                    <div class="form-grp">
+                    <label for="social_importance">Social Importance:</label>
+                    <select name="social_importance" required>
+                        <option value="Not Important">Not Important</option>
+                        <option value="Somewhat Important">Somewhat Important</option>
+                        <option value="Very Important">Very Important</option>
+                    </select>
+                </div>
+
+                <div class="form-grp">
+                    <label for="governance_importance">Governance Importance:</label>
+                    <select name="governance_importance" required>
+                        <option value="Not Important">Not Important</option>
+                        <option value="Somewhat Important">Somewhat Important</option>
+                        <option value="Very Important">Very Important</option>
+                    </select>
+                </div>
+                    <div class="form-grp">
+                    <label for="carbon_footprint_importance">Carbon Footprint Importance:</label>
+                    <select name="carbon_footprint_importance" required>
+                        <option value="Not Important">Not Important</option>
+                        <option value="Somewhat Important">Somewhat Important</option>
+                        <option value="Very Important">Very Important</option>
+                    </select>
+                </div>
+                    <div class="form-grp">
+                    <label for="roi_importance">ROI Importance:</label>
+                    <select name="roi_importance" required>
+                        <option value="Not Important">Not Important</option>
+                        <option value="Low">Low (<=0.07)</option>
+                        <option value="High">High (>0.07)</option>
+                    </select>
+                </div>
+
+                    <div class="form-grp">
+                    <label for="beta_importance">Beta Importance:</label>
+                    <select name="beta_importance" required>
+                        <option value="Not Important">Not Important</option>
+                        <option value="Low Risk">Low Risk (-1 to 0.7)</option>
+                        <option value="Ideal">Ideal (0.8 to 1.2)</option>
+                        <option value="High Risk">High Risk (1.3 to 3)</option>
+                    </select>
+                </div>
+                    
+                    <div class="form-grp">
+                    <label for="pe_ratio_importance">P/E Ratio Importance:</label>
+                    <select name="pe_ratio_importance" required>
+                        <option value="Not Important">Not Important</option>
+                        <option value="Low">Low (Profitable, <23)</option>
+                        <option value="High">High (Loss, >=23)</option>
+                    </select>
+                </div>
+                    <button type="submit" class="btn-re">Get Recommendation</button>
+                </form>
+            
+                
+        </div>
+
+        <div class="results">
+            {% if recommendations is not none %}
+            <h2 style="text-align: center;">Recommended Investments</h2>
+            <table class="output">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Environment Score</th>
+                        <th>Social Score</th>
+                        <th>Governance Score</th>
+                        <th>Carbon Footprint</th>
+                        <th>ROI</th>
+                        <th>Beta</th>
+                        <th>P/E Ratio</th>
+                        <th>Total Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for index, row in recommendations.iterrows() %}
+                    <tr>
+                        <td>{{ row['name'] }}</td>
+                        <td>{{ row['environment_score'] }}</td>
+                        <td>{{ row['social_score'] }}</td>
+                        <td>{{ row['governance_score'] }}</td>
+                        <td>{{ row['carbon_footprint'] }}</td>
+                        <td>{{ row['ROI'] }}</td>
+                        <td>{{ row['Beta'] }}</td>
+                        <td>{{ row['P/E_Ratio'] }}</td>
+                        <td>{{ row['total_score'] }}</td>
+                        <td>{{ row['Similarity'] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="chart-container">
+                <div class="chart-row">
+                <div class="chart">
+                <h3>Total Score Impact</h3>
+                <img src="data:image/png;base64,{{ chart_url }}" alt="Total Score Chart">
+                <p>This chart displays the overall ESG scores of the top recommended investments. A higher score indicates better overall performance in environmental, social, and governance aspects combined with financial metrics.</p>
+            </div>
+
+                <div class="chart">
+                <h3>Carbon Footprint Impact</h3>
+                <img src="data:image/png;base64,{{ carbon_chart_url }}" alt="Carbon Footprint Chart">
+                <p>This chart shows the carbon footprint reduction potential of the recommended investments. A lower value signifies a greater positive impact on reducing carbon emissions.</p>
+            </div>
+        </div>
+
+            <div class="chart-row">
+                <div class="chart">
+                <h3>Profitability Impact</h3>
+                <img src="data:image/png;base64,{{ roi_chart_url }}" alt="ROI Chart">
+                <p>This chart illustrates the expected return on investment (ROI) for the top recommendations. Higher ROI values indicate more profitable investment opportunities.</p>
+                </div>
+
+                <div class="chart">
+                <h3>Risk Analysis</h3>
+                <img src="data:image/png;base64,{{ beta_chart_url }}" alt="Beta Chart">
+                <p>This chart presents the Beta values of the recommended investments. A higher Beta value indicates a higher risk associated with the investment, while a lower Beta value indicates lower risk.</p>
+                </div>
+            </div>
+            </div>
+            {% endif %}
+        </div>
+
+        
+    </main>
+    </body>
+    </html>
